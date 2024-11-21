@@ -1,11 +1,10 @@
 {
   "name": "bike-store",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w",
-    "start": "node ./dist/server.js",
+    "start": "node dist/server.js",
     "dev": "tsnd --respawn ./src/server.ts",
     "format": "prettier . --write src",
     "lint": "eslint src/**/*.ts",
