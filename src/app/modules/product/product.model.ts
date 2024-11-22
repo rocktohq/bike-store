@@ -6,14 +6,16 @@ const bikeSchema = new Schema<TBike, BikeModel>({
   name: {
     type: String,
     required: [true, "Name is required!"],
-    // validate: {
-    //   validator: (value: string) =>
-    //     value === value.charAt(0).toUpperCase() + value.slice(1).toLowerCase(),
-    //   message: "Name is not capitalized!",
-    // },
   },
   brand: { type: String, required: [true, "Brand is required!"] },
-  price: { type: Number, required: [true, "Price is required!"] },
+  price: {
+    type: Number,
+    required: [true, "Price is required!"],
+    validate: {
+      validator: (value: number) => value >= 0,
+      message: "Price must be greater than zero!",
+    },
+  },
   category: { type: String, required: [true, "Category is required!"] },
   description: { type: String, required: [true, "Description is required!"] },
   quantity: {
@@ -21,32 +23,12 @@ const bikeSchema = new Schema<TBike, BikeModel>({
     required: [true, "Quantity is required!"],
     validate: {
       validator: (value: number) => value >= 0,
-      message: "Quantity must be a positive number!",
+      message: "Quantity must be greater than zero!",
     },
   },
   inStock: { type: Boolean, default: true },
-  isDeleted: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-});
-
-//* Middleware
-bikeSchema.pre("find", function (next) {
-  // Exclude deleted bikes: Search all Bikes
-  this.find({ isDeleted: { $ne: true } });
-  next();
-});
-
-// Exlude deleted bike: Search by ID
-bikeSchema.pre("findOne", function (next) {
-  this.find({ isDeleted: { $ne: true } });
-  next();
-});
-
-// Exclude deleted bikes: aggregation
-bikeSchema.pre("aggregate", function (next) {
-  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
-  next();
 });
 
 //* Static Methods

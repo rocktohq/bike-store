@@ -24,7 +24,7 @@ const deleteSingleBikeFromDB = async (id: string) => {
   if ((await Bike.findOne({ _id: id })) === null) {
     throw new Error("Bike not found or already deleted!");
   } else {
-    const result = await Bike.updateOne({ _id: id }, { isDeleted: true });
+    const result = await Bike.deleteOne({ _id: id });
     return result;
   }
 };

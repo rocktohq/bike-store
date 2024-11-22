@@ -9,7 +9,6 @@ export interface TBike {
   description: string;
   quantity: number;
   inStock: boolean;
-  isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

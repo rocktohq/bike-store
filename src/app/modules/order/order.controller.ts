@@ -5,7 +5,7 @@ import { OrderServices } from "./order.service";
 // Add a new Order
 const createOrder = async (req: Request, res: Response) => {
   try {
-    const { order: orderData } = req.body;
+    const orderData = { ...req.body };
 
     // Validate orderData
     const zodParsedData = orderValidationSchema.parse(orderData);
@@ -24,7 +24,7 @@ const createOrder = async (req: Request, res: Response) => {
       message: error?.issues?.[0]?.message
         ? error?.issues?.[0]?.message
         : error.message || "Failed to create order",
-      status: false,
+      success: false,
       error: {
         name: error?.name,
         errors: error?.issues?.[0],
@@ -41,14 +41,14 @@ const getRevenue = async (req: Request, res: Response) => {
     res.status(200).send({
       message: "Revenue calculated successfully",
       status: true,
-      data: result,
+      data: result?.[0],
     });
   } catch (error: any) {
     res.status(500).send({
       message: error?.issues?.[0]?.message
         ? error?.issues?.[0]?.message
         : error.message || "Failed to calculate revenue",
-      status: false,
+      success: false,
       error: {
         name: error?.name,
         errors: error?.issues?.[0],

@@ -19,10 +19,9 @@ const orderSchema = new Schema<TOrder, OrderModel>({
     required: true,
     validate: {
       validator: (value: number) => value > 0,
-      message: "Total price must be a positive number!",
+      message: "Total price must be greater than zero!",
     },
   },
-  isDeleted: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
@@ -38,8 +37,8 @@ orderSchema.pre("save", async function () {
   }
 
   // Insufficient stock
-  if (product.quantity < this.quantity) {
-    throw new Error("Insufficient stock available for this product!");
+  if (product.quantity === 0 || product.quantity < this.quantity) {
+    throw new Error("This product is out of stock!");
   }
 });
 

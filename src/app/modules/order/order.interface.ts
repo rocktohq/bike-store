@@ -5,7 +5,6 @@ export interface TOrder {
   productId: string;
   quantity: number;
   totalPrice: number;
-  isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

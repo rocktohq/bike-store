@@ -9,7 +9,17 @@ import { Bike } from "./product.model";
 const createBike = async (req: Request, res: Response) => {
   try {
     // Bike data from request
-    const { bike: bikeData } = req.body;
+    const { name, brand, category, price, description, quantity, inStock } =
+      req.body;
+    const bikeData = {
+      name,
+      brand,
+      category,
+      price,
+      description,
+      quantity,
+      inStock,
+    };
 
     // Validate bikeData and add bike
     const zodParsedData = bikeValidationSchema.parse(bikeData);
@@ -43,7 +53,7 @@ const getBikes = async (req: Request, res: Response) => {
     const result = await BikeServices.getBikesFromDB();
     res.status(200).send({
       message: "Bikes retrieved successfully",
-      success: true,
+      status: true,
       data: result,
     });
   } catch (error: any) {
@@ -73,17 +83,17 @@ const getSingleBike = async (req: Request, res: Response) => {
         success: false,
         data: {},
       });
+    } else {
+      // Get the bike
+      const result = await BikeServices.getSingleBikeFromDB(id);
+
+      // Send the response with data
+      res.status(200).send({
+        message: "Bike retrieved successfully",
+        status: true,
+        data: result,
+      });
     }
-
-    // Get the bike
-    const result = await BikeServices.getSingleBikeFromDB(id);
-
-    // Send the response with data
-    res.status(200).send({
-      message: "Bike retrieved successfully",
-      success: true,
-      data: result,
-    });
   } catch (error: any) {
     res.status(500).send({
       message: error?.issues?.[0]?.message
@@ -111,17 +121,17 @@ const deleteSingleBike = async (req: Request, res: Response) => {
         success: false,
         data: {},
       });
+    } else {
+      // Delete the bike
+      const result = await BikeServices.deleteSingleBikeFromDB(id);
+
+      // Send response
+      res.status(200).send({
+        message: "Bike deleted successfully",
+        status: true,
+        data: result ? result : {},
+      });
     }
-
-    // Delete the bike
-    const result = await BikeServices.deleteSingleBikeFromDB(id);
-
-    // Send response
-    res.status(200).send({
-      message: "Bike deleted successfully",
-      success: true,
-      data: result,
-    });
   } catch (error: any) {
     res.status(500).send({
       message: error?.issues?.[0]?.message
@@ -141,7 +151,7 @@ const deleteSingleBike = async (req: Request, res: Response) => {
 const updateSingleBike = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { bike: bikeData } = req.body;
+    const bikeData = { ...req.body, updatedAt: new Date() };
 
     // Check if bike exists
     if ((await Bike.isBikeExists(id)) === null) {
@@ -150,18 +160,21 @@ const updateSingleBike = async (req: Request, res: Response) => {
         success: false,
         data: {},
       });
+    } else {
+      // Validate and update the bike data
+      const zodParsedData = updateBikeValidationSchema.parse(bikeData);
+      const result = await BikeServices.updateSingleBikeFromDB(
+        id,
+        zodParsedData,
+      );
+
+      // Send response with updated data
+      res.status(200).send({
+        message: "Bike updated successfully",
+        status: true,
+        data: result,
+      });
     }
-
-    // Validate and update the bike data
-    const zodParsedData = updateBikeValidationSchema.parse(bikeData);
-    const result = await BikeServices.updateSingleBikeFromDB(id, zodParsedData);
-
-    // Send response with updated data
-    res.status(200).send({
-      message: "Bike updated successfully",
-      success: true,
-      data: result,
-    });
   } catch (error: any) {
     res.status(500).send({
       message: error?.issues?.[0]?.message

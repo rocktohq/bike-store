@@ -6,11 +6,12 @@ const orderValidationSchema = z.object({
   productId: z.string().nonempty({ message: "Product ID is required!" }),
   quantity: z
     .number()
-    .positive({ message: "Quantity must be a positive number!" }),
+    .positive({ message: "Quantity must be a positive number!" })
+    .refine((value) => value > 0, { message: "Quantity can't be zero!" }),
   totalPrice: z
     .number()
-    .positive({ message: "Total price must be a positive number!" }),
-  isDeleted: z.boolean().default(false),
+    .positive({ message: "Total price must be a positive number!" })
+    .refine((value) => value > 0, { message: "Total Price can't be zero!" }),
   createdAt: z.date().optional().default(new Date()),
   updatedAt: z.date().optional().default(new Date()),
 });
