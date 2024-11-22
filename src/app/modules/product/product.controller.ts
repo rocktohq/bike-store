@@ -151,7 +151,8 @@ const deleteSingleBike = async (req: Request, res: Response) => {
 const updateSingleBike = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const bikeData = { ...req.body, updatedAt: new Date() };
+    const bikeData = { ...req.body };
+    bikeData.updatedAt = new Date(); // upddatedAt?: timestamp
 
     // Check if bike exists
     if ((await Bike.isBikeExists(id)) === null) {
