@@ -8,8 +8,27 @@ const createBikeInDB = async (bikeData: TBike) => {
 };
 
 // Get all Bikes from the database:
-const getBikesFromDB = async () => {
-  const result = await Bike.find({});
+const getBikesFromDB = async (searchTerm: string) => {
+  const result = await Bike.aggregate([
+    {
+      // Matching bikes with the search term.
+      // Used $regex to match partially and case-insensitively
+      $match: {
+        $or: [
+          { name: { $regex: searchTerm, $options: "i" } },
+          { brand: { $regex: searchTerm, $options: "i" } },
+          { category: { $regex: searchTerm, $options: "i" } },
+        ],
+      },
+    },
+    {
+      // GroupBy category
+      $group: {
+        _id: "$category",
+        bikes: { $push: "$$ROOT" },
+      },
+    },
+  ]);
   return result;
 };
 

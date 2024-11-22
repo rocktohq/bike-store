@@ -50,12 +50,21 @@ const createBike = async (req: Request, res: Response) => {
 const getBikes = async (req: Request, res: Response) => {
   try {
     // Retrive all Bikes data
-    const result = await BikeServices.getBikesFromDB();
-    res.status(200).send({
-      message: "Bikes retrieved successfully",
-      status: true,
-      data: result,
-    });
+    const searchTerm = (req.query.searchTerm as string) || "";
+    const result = await BikeServices.getBikesFromDB(searchTerm);
+    if (result.length > 0) {
+      res.status(200).send({
+        message: "Bikes retrieved successfully",
+        status: true,
+        data: result,
+      });
+    } else {
+      res.status(404).send({
+        message: "No bike found",
+        status: false,
+        data: result,
+      });
+    }
   } catch (error: any) {
     res.status(500).send({
       message: error?.issues?.[0]?.message

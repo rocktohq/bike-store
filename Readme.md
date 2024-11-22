@@ -17,10 +17,10 @@
 <div id="technologiesUsed">
 <h3>Technologies Used:</h3>
 
-- **TypeScript:** We have uses typeScript to code this entire application.
-- **Express.js:** For creating the Server.
-- **Mongoose:** Integreting with MongoDB Query
+- **TypeScript:** We have used typeScript to code this entire application.
+- **Express.js:** Express.js is the most popular Node.js framework. So, we have used it for creating the Server.
 - **MongoDB:** Integreting with MongoDB Database
+- **Mongoose:** Integreting with MongoDB Query
 - **Zod:** We have used Zod for validating user input data.
 </div>
 
