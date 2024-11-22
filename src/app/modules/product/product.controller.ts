@@ -3,6 +3,7 @@ import { BikeServices } from "./product.service";
 import bikeValidationSchema, {
   updateBikeValidationSchema,
 } from "./product.validation";
+import { Bike } from "./product.model";
 
 // Add a new Bike
 const createBike = async (req: Request, res: Response) => {
@@ -19,10 +20,15 @@ const createBike = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     res.status(500).send({
-      message: error.message || "Failed to create bike",
+      message: error?.issues?.[0]?.message
+        ? error?.issues?.[0]?.message
+        : error?.message || "Failed to create bike",
       success: false,
-      error: error,
-      stack: error.stack,
+      error: {
+        name: error?.name,
+        errors: error?.issues?.[0],
+      },
+      stack: error?.stack,
     });
   }
 };
@@ -38,10 +44,15 @@ const getBikes = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     res.status(500).send({
-      message: error.message || "Failed to retrieve bikes",
+      message: error?.issues?.[0]?.message
+        ? error?.issues?.[0]?.message
+        : error?.message || "Failed to retrive bikes",
       success: false,
-      error: error,
-      stack: error.stack,
+      error: {
+        name: error?.name,
+        errors: error?.issues?.[0],
+      },
+      stack: error?.stack,
     });
   }
 };
@@ -50,6 +61,15 @@ const getBikes = async (req: Request, res: Response) => {
 const getSingleBike = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
+    // Check if bike exists
+    if ((await Bike.isBikeExists(id)) === null) {
+      return res.status(404).send({
+        message: "Bike not found",
+        success: false,
+        data: {},
+      });
+    }
     const result = await BikeServices.getSingleBikeFromDB(id);
 
     res.status(200).send({
@@ -58,11 +78,16 @@ const getSingleBike = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(404).send({
-      message: error.message || "Bike not found!",
+    res.status(500).send({
+      message: error?.issues?.[0]?.message
+        ? error?.issues?.[0]?.message
+        : error?.message || "Failed to retrieve bike",
       success: false,
-      error: error,
-      stack: error.stack,
+      error: {
+        name: error?.name,
+        errors: error?.issues?.[0],
+      },
+      stack: error?.stack,
     });
   }
 };
@@ -71,6 +96,16 @@ const getSingleBike = async (req: Request, res: Response) => {
 const deleteSingleBike = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
+    // Check if bike exists
+    if ((await Bike.isBikeExists(id)) === null) {
+      return res.status(404).send({
+        message: "Bike not found or already deleted",
+        success: false,
+        data: {},
+      });
+    }
+
     const result = await BikeServices.deleteSingleBikeFromDB(id);
 
     res.status(200).send({
@@ -79,11 +114,16 @@ const deleteSingleBike = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(404).send({
-      message: error.message || "Bike not found!",
+    res.status(500).send({
+      message: error?.issues?.[0]?.message
+        ? error?.issues?.[0]?.message
+        : error?.message || "Failed to delete bike",
       success: false,
-      error: error,
-      stack: error.stack,
+      error: {
+        name: error?.name,
+        errors: error?.issues?.[0],
+      },
+      stack: error?.stack,
     });
   }
 };
@@ -94,6 +134,15 @@ const updateSingleBike = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { bike: bikeData } = req.body;
 
+    // Check if bike exists
+    if ((await Bike.isBikeExists(id)) === null) {
+      return res.status(404).send({
+        message: "Bike not found",
+        success: false,
+        data: {},
+      });
+    }
+
     const zodParsedData = updateBikeValidationSchema.parse(bikeData);
     const result = await BikeServices.updateSingleBikeFromDB(id, zodParsedData);
 
@@ -103,11 +152,16 @@ const updateSingleBike = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(404).send({
-      message: error.message || "Bike not found!",
+    res.status(500).send({
+      message: error?.issues?.[0]?.message
+        ? error?.issues?.[0]?.message
+        : error?.message || "Failed to update bike",
       success: false,
-      error: error,
-      stack: error.stack,
+      error: {
+        name: error?.name,
+        errors: error?.issues?.[0],
+      },
+      stack: error?.stack,
     });
   }
 };

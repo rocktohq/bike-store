@@ -15,12 +15,8 @@ const getBikesFromDB = async () => {
 
 // Get single Bike from the database
 const getSingleBikeFromDB = async (id: string) => {
-  if ((await Bike.findOne({ _id: id })) === null) {
-    throw new Error("No such Bike found!");
-  } else {
-    const result = await Bike.findOne({ _id: id });
-    return result;
-  }
+  const result = await Bike.findOne({ _id: id });
+  return result;
 };
 
 // Delete a Bike from the database

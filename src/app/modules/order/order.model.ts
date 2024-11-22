@@ -29,8 +29,7 @@ const orderSchema = new Schema<TOrder, OrderModel>({
 
 //* Middleware
 // Pre-Order product search
-orderSchema.pre("save", async function (next) {
-  console.log("Pre-Order Product");
+orderSchema.pre("save", async function () {
   const product = await Bike.findById(this.productId);
 
   // Product not found
@@ -42,19 +41,15 @@ orderSchema.pre("save", async function (next) {
   if (product.quantity < this.quantity) {
     throw new Error("Insufficient stock available for this product!");
   }
-
-  // this.totalPrice = product.price * this.quantity;
-  next();
 });
 
 // Post-Order product update
 orderSchema.post("save", async function (doc, next) {
-  console.log("Post-Order Product Update");
   const product = await Bike.findByIdAndUpdate(doc.productId, {
     $inc: { quantity: -this.quantity },
   });
 
-  // Product quantity is 0
+  // Product quantity is 0 / product is out of stock
   if (product != null && product.quantity === 0) {
     await Bike.findByIdAndUpdate(doc.productId, {
       $set: { inStock: false },
