@@ -39,16 +39,5 @@ orderSchema.pre("findOne", function (next) {
   next();
 });
 
-// Exclude deleted order: aggregation
-orderSchema.pre("aggregate", function (next) {
-  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
-  next();
-});
-
-//* Static Methods
-orderSchema.statics.isOrderExists = async function (id: string) {
-  return Order.findOne({ _id: id });
-};
-
 //* Model for Bike
 export const Order = model<TOrder, OrderModel>("Order", orderSchema);

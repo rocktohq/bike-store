@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import { BikeRoutes } from "./app/modules/product/product.routes";
+import { OrderRoutes } from "./app/modules/order/order.routes";
 const app: Application = express();
 
 //* Parsers
@@ -9,6 +10,7 @@ app.use(cors());
 
 //* Application routes
 app.use("/api/products", BikeRoutes);
+app.use("/api/orders", OrderRoutes);
 
 //* Default route
 app.get("/", (req: Request, res: Response) => {

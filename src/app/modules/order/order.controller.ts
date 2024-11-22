@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-import orderValidationSchema, {
-  partialOrderValidationSchema,
-} from "./order.validation";
+import orderValidationSchema from "./order.validation";
 import { OrderServices } from "./order.service";
 
 // Add a new Order
@@ -27,87 +25,18 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-// Get all Orders
-const getOrders = async (req: Request, res: Response) => {
+// Get revenue
+const getRevenue = async (req: Request, res: Response) => {
   try {
-    const result = await OrderServices.getOrdersFromDB();
+    const result = await OrderServices.getRevenueFromDB();
     res.status(200).send({
-      message: "Orders retrieved successfully",
+      message: "Revenue calculated successfully",
       success: true,
       data: result,
     });
   } catch (error: any) {
     res.status(500).send({
-      message: error.message || "Failed to retrieve orders",
-      success: false,
-      error: error,
-      stack: error.stack,
-    });
-  }
-};
-
-// Get a single Order
-const getSingleOrder = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const result = await OrderServices.getSingleOrderFromDB(id);
-
-    res.status(200).send({
-      message: "Order retrieved successfully",
-      success: true,
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(404).send({
-      message: error.message || "Order not found!",
-      success: false,
-      error: error,
-      stack: error.stack,
-    });
-  }
-};
-
-// Delete a Order
-const deleteSingleOrder = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const result = await OrderServices.deleteSingleOrderFromDB(id);
-
-    res.status(200).send({
-      message: "Order deleted successfully",
-      success: true,
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(404).send({
-      message: error.message || "Order not found!",
-      success: false,
-      error: error,
-      stack: error.stack,
-    });
-  }
-};
-
-// Update a Order
-const updateSingleOrder = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { order: orderData } = req.body;
-
-    const zodParsedData = partialOrderValidationSchema.parse(orderData);
-    const result = await OrderServices.updateSingleOrderFromDB(
-      id,
-      zodParsedData,
-    );
-
-    res.status(200).send({
-      message: "Order updated successfully",
-      success: true,
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(404).send({
-      message: error.message || "Order not found!",
+      message: error.message || "Failed to calculate revenue",
       success: false,
       error: error,
       stack: error.stack,
@@ -117,8 +46,5 @@ const updateSingleOrder = async (req: Request, res: Response) => {
 
 export const OrderControllers = {
   createOrder,
-  getOrders,
-  getSingleOrder,
-  deleteSingleOrder,
-  updateSingleOrder,
+  getRevenue,
 };
