@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { OrderModel, TOrder } from "./order.interface";
+import { Bike } from "../product/product.model";
 
 //* Order Schema
 const orderSchema = new Schema<TOrder, OrderModel>({
@@ -27,15 +28,39 @@ const orderSchema = new Schema<TOrder, OrderModel>({
 });
 
 //* Middleware
-orderSchema.pre("find", function (next) {
-  // Exclude deleted orders: all orders
-  this.find({ isDeleted: { $ne: true } });
+// Pre-Order product search
+orderSchema.pre("save", async function (next) {
+  console.log("Pre-Order Product");
+  const product = await Bike.findById(this.productId);
+
+  // Product not found
+  if (product === null) {
+    throw new Error("Product not found!");
+  }
+
+  // Insufficient stock
+  if (product.quantity < this.quantity) {
+    throw new Error("Insufficient stock available for this product!");
+  }
+
+  // this.totalPrice = product.price * this.quantity;
   next();
 });
 
-// Exlude deleted order: single order
-orderSchema.pre("findOne", function (next) {
-  this.find({ isDeleted: { $ne: true } });
+// Post-Order product update
+orderSchema.post("save", async function (doc, next) {
+  console.log("Post-Order Product Update");
+  const product = await Bike.findByIdAndUpdate(doc.productId, {
+    $inc: { quantity: -this.quantity },
+  });
+
+  // Product quantity is 0
+  if (product != null && product.quantity === 0) {
+    await Bike.findByIdAndUpdate(doc.productId, {
+      $set: { inStock: false },
+    });
+  }
+
   next();
 });
 
