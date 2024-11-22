@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { BikeServices } from "./bike.service";
+import { BikeServices } from "./product.service";
 import bikeValidationSchema, {
   updateBikeValidationSchema,
-} from "./bike.validation";
+} from "./product.validation";
 
-//  Add a new Bike
+// Add a new Bike
 const createBike = async (req: Request, res: Response) => {
   try {
     const { bike: bikeData } = req.body;
@@ -13,13 +13,13 @@ const createBike = async (req: Request, res: Response) => {
     const result = await BikeServices.createBikeInDB(zodParsedData);
 
     res.status(200).send({
-      success: true,
       message: "Bike created successfully",
+      success: true,
       data: result,
     });
   } catch (error: any) {
     res.status(500).send({
-      message: error.message || "Failed to create bike!",
+      message: error.message || "Failed to create bike",
       success: false,
       error: error,
       stack: error.stack,
@@ -38,7 +38,7 @@ const getBikes = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     res.status(500).send({
-      message: error.message || "Failed to fetch bikes!",
+      message: error.message || "Failed to retrieve bikes",
       success: false,
       error: error,
       stack: error.stack,

@@ -1,5 +1,5 @@
-import { TBike, TPartialBike } from "./bike.interface";
-import { Bike } from "./bike.model";
+import { TBike, TPartialBike } from "./product.interface";
+import { Bike } from "./product.model";
 
 // Add a new Bike to the database
 const createBikeInDB = async (bikeData: TBike) => {

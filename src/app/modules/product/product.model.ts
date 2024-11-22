@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { BikeModel, TBike } from "./bike.interface";
+import { BikeModel, TBike } from "./product.interface";
 
 // Initiating Schema for Bike
 const bikeSchema = new Schema<TBike, BikeModel>({

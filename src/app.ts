@@ -1,6 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
-import { BikeRoutes } from "./app/modules/bike/bike.routes";
+import { BikeRoutes } from "./app/modules/product/product.routes";
 const app: Application = express();
 
 //* Parsers
