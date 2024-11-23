@@ -21,13 +21,13 @@ const getBikesFromDB = async (searchTerm: string) => {
         ],
       },
     },
-    {
-      // GroupBy category
-      $group: {
-        _id: "$category",
-        bikes: { $push: "$$ROOT" },
-      },
-    },
+    // {
+    //   // GroupBy category
+    //   $group: {
+    //     _id: "$category",
+    //     bikes: { $push: "$$ROOT" },
+    //   },
+    // },
   ]);
   return result;
 };
@@ -43,7 +43,7 @@ const deleteSingleBikeFromDB = async (id: string) => {
   if ((await Bike.findOne({ _id: id })) === null) {
     throw new Error("Bike not found or already deleted!");
   } else {
-    const result = await Bike.deleteOne({ _id: id });
+    const result = await Bike.findOneAndDelete({ _id: id });
     return result;
   }
 };
@@ -56,7 +56,7 @@ const updateSingleBikeFromDB = async (
   if ((await Bike.findOne({ _id: id })) === null) {
     throw new Error("Bike not found!");
   } else {
-    const result = await Bike.updateOne(
+    const result = await Bike.findOneAndUpdate(
       { _id: id },
       {
         $set: {

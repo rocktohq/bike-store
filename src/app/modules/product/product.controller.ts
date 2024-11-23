@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
 import { BikeServices } from "./product.service";
 import bikeValidationSchema, {
@@ -60,9 +61,13 @@ const getBikes = async (req: Request, res: Response) => {
       });
     } else {
       res.status(404).send({
-        message: "No bike found",
-        status: false,
-        data: result,
+        message: "Bike not found",
+        success: false,
+        error: {
+          name: "Bike not found",
+          errors: {},
+        },
+        stack: "",
       });
     }
   } catch (error: any) {
@@ -90,7 +95,11 @@ const getSingleBike = async (req: Request, res: Response) => {
       res.status(404).send({
         message: "Bike not found",
         success: false,
-        data: {},
+        error: {
+          name: "Bike not found",
+          errors: {},
+        },
+        stack: "",
       });
     } else {
       // Get the bike
@@ -168,7 +177,11 @@ const updateSingleBike = async (req: Request, res: Response) => {
       res.status(404).send({
         message: "Bike not found",
         success: false,
-        data: {},
+        error: {
+          name: "Bike not found",
+          errors: {},
+        },
+        stack: "",
       });
     } else {
       // Validate and update the bike data
