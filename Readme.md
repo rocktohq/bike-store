@@ -86,10 +86,10 @@ npm run dev
 </div>
 
 <div id="apiEndpoints">
-<h2>API Endpoits</h2>
+<h2>API Endpoints</h2>
 
 1. **_Add a new Bike:_**  
-   API Endpoits: `/api/products`  
+   Endpoints: `/api/products`  
    Method: `POST`  
    Request Body:
 
@@ -127,7 +127,7 @@ Response:
 ```
 
 2. **_Get all Bikes:_**  
-   API Endpoits: `/api/products`  
+   Endpoints: `/api/products`  
    Method: `GET`  
    Response:
 
@@ -200,7 +200,7 @@ Response:
 ```
 
 3. **_Get a Single Bike:_**  
-    API Endpoits: `/api/products/productId`  
+    Endpoints: `/api/products/productId`  
     Method: `GET`
    Response:
 
@@ -225,7 +225,7 @@ Response:
 ```
 
 4. **_Update a Bike:_**  
-   API Endpoits: `/api/products/productId`  
+   Endpoints: `/api/products/productId`  
    Method: `PUT`
    Request Body:
 
@@ -260,7 +260,7 @@ Response:
 ```
 
 5. **_Delete a Bike:_**  
-   API Endpoits: `/api/products/productId`  
+   Endpoints: `/api/products/productId`  
    Method: `DELETE`  
    Response:
 
@@ -285,7 +285,7 @@ Response:
 ```
 
 6. **_Place an Order:_**  
-   API Endpoits: `/api/orders`  
+   Endpoints: `/api/orders`  
    Method: `POST`
    Request Body:
 
@@ -317,7 +317,7 @@ Response:
 ```
 
 7. **_Revenue Calculation:_**  
-   API Endpoits: `/api/orders/revenue`  
+   Endpoints: `/api/orders/revenue`  
    Method: `GET`  
    Response:
 
