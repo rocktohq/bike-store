@@ -37,8 +37,13 @@ orderSchema.pre("save", async function () {
   }
 
   // Insufficient stock
-  if (product.quantity === 0 || product.quantity < this.quantity) {
+  if (product.quantity === 0 || product.inStock === false) {
     throw new Error("This product is out of stock!");
+  }
+
+  // Insufficent products
+  if (product.quantity < this.quantity) {
+    throw new Error("Insufficient products!");
   }
 });
 
@@ -49,7 +54,7 @@ orderSchema.post("save", async function (doc, next) {
   });
 
   // Product quantity is 0 / product is out of stock
-  if (product != null && product.quantity === 0) {
+  if (product != null && product.quantity - doc.quantity === 0) {
     await Bike.findByIdAndUpdate(doc.productId, {
       $set: { inStock: false },
     });
